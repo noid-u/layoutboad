@@ -357,6 +357,10 @@
     function selectedConnectors(){ return connections.filter(function(c){ var el = $('#'+CSS.escape(c.id)); return el && el.classList.contains('selected'); }); }
     function clearConnectorSelection(){ connections.forEach(function(c){ var el = $('#'+CSS.escape(c.id)); if(el) el.classList.remove('selected'); }); }
     function selectConnector(el){ el.classList.add('selected'); }
+    function selectNode(el){
+      el.classList.add('selected');
+      // 必要に応じて el.focus(); を追加
+    }
     function clearSelection(){ selectedNodes().forEach(function(n){ n.classList.remove('selected'); }); clearConnectorSelection(); }
 
     stage.addEventListener('pointerdown', function(e){
