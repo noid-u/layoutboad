@@ -109,7 +109,7 @@
   .endpoint{position:absolute;width:10px;height:10px;border:1px solid #2563eb;background:#fff;border-radius:50%;transform:translate(-50%, -50%);cursor:pointer; display:none;}
   .node.selected .endpoint{display:block;}
   /* コネクタ（別レイヤ） */
-  #connLayer{position:absolute; left:0; top:0; width:100%; height:100%;}
+  #connLayer{position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none;}
   .connector{pointer-events:stroke; cursor:pointer; stroke:#64748b; stroke-width:2;}
   .connector.selected{stroke:var(--sel);}
   .marquee{position:absolute;border:1px dashed #2563eb;background:rgba(37,99,235,.08);pointer-events:none;display:none}

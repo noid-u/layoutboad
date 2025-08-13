@@ -366,7 +366,7 @@
     function clearSelection(){ selectedNodes().forEach(function(n){ n.classList.remove('selected'); }); clearConnectorSelection(); }
 
     stage.addEventListener('pointerdown', function(e){
-      if(e.target === stage || e.target === connLayer){
+      if(e.target === stage){
         clearSelection();
         startMarquee(e);
         updateInspectorFromSelection();
