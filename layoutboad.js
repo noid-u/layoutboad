@@ -131,7 +131,40 @@
     }
 
     /* ===== ノード生成 ===== */
-    function addNode(opts){
+    function createLineNode(opts){
+      var type=opts.type,x=opts.x||0,y=opts.y||0;
+      var el = document.createElement('div');
+      el.className = 'node';
+      el.dataset.type = type;
+      el.dataset.id = uid();
+      el.dataset.rotate = (opts.rotate||0);
+      el.dataset.textMode = opts.textMode || 'auto';
+      el.tabIndex = 0;
+      var d = typeDefaults.line;
+      el.style.left = x+'px'; el.style.top = y+'px';
+      el.style.width = '1px'; el.style.height = '1px';
+      el.dataset.x1 = opts.x1!=null? +opts.x1 : 0;
+      el.dataset.y1 = opts.y1!=null? +opts.y1 : 0;
+      el.dataset.x2 = opts.x2!=null? +opts.x2 : 160;
+      el.dataset.y2 = opts.y2!=null? +opts.y2 : 0;
+      el.dataset.strokeW = opts.strokeW!=null? +opts.strokeW : d.strokeW;
+      el.dataset.color = opts.color || d.color;
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.classList.add('line-svg');
+      var ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      svg.appendChild(ln);
+      el.appendChild(svg);
+      var ep1 = document.createElement('div'); ep1.className='endpoint ep1';
+      var ep2 = document.createElement('div'); ep2.className='endpoint ep2';
+      el.appendChild(ep1); el.appendChild(ep2);
+      stage.appendChild(el);
+      normalizeLineBBox(el);
+      updateLineGraphics(el);
+      enableLineInteractions(el);
+      return el;
+    }
+
+    function createShapeNode(opts){
       var type=opts.type,x=opts.x||0,y=opts.y||0,w=opts.w,h=opts.h,text=opts.text,bg=opts.bg,fg=opts.fg,radius=opts.radius,rotate=opts.rotate,fontSize=opts.fontSize,textMode=opts.textMode;
       var bw=opts.borderW, bs=opts.borderS, bc=opts.borderC, bgAlpha=opts.bgAlpha;
       var el = document.createElement('div');
@@ -141,32 +174,6 @@
       el.dataset.rotate = (rotate||0);
       el.dataset.textMode = textMode || 'auto';
       el.tabIndex = 0;
-
-      if(type==='line'){
-        var d = typeDefaults.line;
-        el.style.left = x+'px'; el.style.top = y+'px';
-        el.style.width = '1px'; el.style.height = '1px';
-        el.dataset.x1 = opts.x1!=null? +opts.x1 : 0;
-        el.dataset.y1 = opts.y1!=null? +opts.y1 : 0;
-        el.dataset.x2 = opts.x2!=null? +opts.x2 : 160;
-        el.dataset.y2 = opts.y2!=null? +opts.y2 : 0;
-        el.dataset.strokeW = opts.strokeW!=null? +opts.strokeW : d.strokeW;
-        el.dataset.color = opts.color || d.color;
-        var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.classList.add('line-svg');
-        var ln = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        svg.appendChild(ln);
-        el.appendChild(svg);
-        var ep1 = document.createElement('div'); ep1.className='endpoint ep1';
-        var ep2 = document.createElement('div'); ep2.className='endpoint ep2';
-        el.appendChild(ep1); el.appendChild(ep2);
-        stage.appendChild(el);
-        normalizeLineBBox(el);
-        updateLineGraphics(el);
-        enableLineInteractions(el);
-        return el;
-      }
-
       var d = typeDefaults[type]||{bg:'#fff',fg:'#111',radius:8,bw:1,bs:'solid',bc:'#cbd5e1',alpha:1};
       el.style.left = clamp(x,0,stage.clientWidth - (w||80)) + 'px';
       el.style.top  = clamp(y,0,stage.clientHeight - (h||40)) + 'px';
@@ -178,11 +185,9 @@
       el.style.borderWidth = (bw!=null? bw : d.bw) + 'px';
       el.style.borderColor = bc || d.bc;
       if(type==='triangle' || type==='star'){ el.style.border = '0'; }
-
       var shape = document.createElement('div');
       shape.className = 'shape ' + (type==='rect'?'rect': type==='circle'?'circle': type==='triangle'?'triangle': type==='star'?'star':'rect');
       el.appendChild(shape);
-
       var label = document.createElement('div'); label.className = 'label';
       var inner = document.createElement('div'); inner.className = 'label-inner';
       inner.innerText = text || defaultText(type);
@@ -190,16 +195,12 @@
       inner.style.fontSize = (fontSize? fontSize : 14) + 'px';
       label.appendChild(inner);
       el.appendChild(label);
-
       setNodeBackground(el, (bg||d.bg), (bgAlpha!=null? bgAlpha : d.alpha));
-
       var hResize = document.createElement('div'); hResize.className = 'handle resize'; el.appendChild(hResize);
       var hRotate = document.createElement('div'); hRotate.className = 'handle rotate'; el.appendChild(hRotate);
-
       enableNodeInteractions(el);
       enableResize(el, hResize);
       enableRotate(el, hRotate);
-
       el.addEventListener('dblclick', function(e){
         if(el.dataset.type==='line') return;
         var lab = el.querySelector('.label-inner'); if(!lab) return;
@@ -212,10 +213,14 @@
         lab.addEventListener('keydown', onKey); lab.addEventListener('blur', onBlur);
         e.stopPropagation();
       });
-
       stage.appendChild(el);
       applyTextOrientation(el);
       return el;
+    }
+
+    function addNode(opts){
+      if(opts.type==='line') return createLineNode(opts);
+      return createShapeNode(opts);
     }
 
     function enableNodeInteractions(el){
