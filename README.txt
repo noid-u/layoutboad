@@ -4,7 +4,7 @@ layoutboadは、ブラウザだけで図形やオフィス家具を配置し、�
 
 起動方法
 このリポジトリを任意のフォルダにダウンロードまたはクローンします。
-layoutboad_v0.5.html をブラウザで開くとアプリが起動します。
+index.html をブラウザで開くとアプリが起動します。
 
 画面構成と主な操作
 ヘッダー
@@ -24,6 +24,6 @@ layoutboad_v0.5.html をブラウザで開くとアプリが起動します。
  「画像保存」からPNGまたはJPEGで保存可能（JPEGは品質調整に対応）
 
 ファイル構成
-  layoutboad_v0.5.html: アプリ本体のHTML
+  index.html: アプリ本体のHTML
   layoutboad.js: アプリのロジック
   layoutboad.css: スタイルシート
