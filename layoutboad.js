@@ -124,6 +124,7 @@
     function createLineNode(opts){
       var type=opts.type,x=opts.x||0,y=opts.y||0;
       var el = document.createElement('div');
+      el.draggable = false;
       el.className = 'node';
       el.dataset.type = type;
       el.dataset.id = uid();
@@ -158,6 +159,7 @@
       var type=opts.type,x=opts.x||0,y=opts.y||0,w=opts.w,h=opts.h,text=opts.text,bg=opts.bg,fg=opts.fg,radius=opts.radius,rotate=opts.rotate,fontSize=opts.fontSize,textMode=opts.textMode;
       var bw=opts.borderW, bs=opts.borderS, bc=opts.borderC, bgAlpha=opts.bgAlpha;
       var el = document.createElement('div');
+      el.draggable = false;
       el.className = 'node';
       el.dataset.type = type;
       el.dataset.id = uid();
@@ -214,6 +216,7 @@
     }
 
     function enableNodeInteractions(el){
+      el.addEventListener('dragstart', e => e.preventDefault());
       function onPointerDown(e){
         if(connectMode){
           e.preventDefault(); e.stopPropagation();
@@ -236,6 +239,7 @@
     }
 
     function enableLineInteractions(el){
+      el.addEventListener('dragstart', e => e.preventDefault());
       function beginDragBody(e){
         if(connectMode){ handleConnectClick(el); return; }
         if(e.target.classList && e.target.classList.contains('endpoint')) return;
