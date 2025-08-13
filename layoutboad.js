@@ -75,13 +75,8 @@
         var w = +it.dataset.w||80, h = +it.dataset.h||40;
         var gx = +gridRange.value;
         var x = p.x - w/2, y = p.y - h/2;
-        if(snapBox.checked && it.dataset.type!=='line'){ x = Math.round(x/gx)*gx; y = Math.round(y/gx)*gx; }
-        if(it.dataset.type==='line'){
-          var L = 160;
-          addNode({type:'line', x:p.x - L/2, y:p.y, x1:0, y1:0, x2:L, y2:0, strokeW:2, color:'#64748b'});
-        }else{
-          addNode({type: it.dataset.type, x:x, y:y, w:w, h:h, text: it.dataset.text||'', textMode:'auto'});
-        }
+        if(snapBox.checked){ x = Math.round(x/gx)*gx; y = Math.round(y/gx)*gx; }
+        addNode({type: it.dataset.type, x:x, y:y, w:w, h:h, text: it.dataset.text||'', textMode:'auto'});
         pushHistory();
       });
     });
@@ -91,21 +86,16 @@
     stageWrap.addEventListener('drop', function(e){
       e.preventDefault(); e.stopPropagation();
       var dt = e.dataTransfer; if(!dt) return;
-      var text = ''; try{ text = dt.getData('text/plain'); }catch(_){}
-      if(!text) return;
-      var rec; try{ rec = JSON.parse(text); }catch(_){ return; }
-      var p = clientToStage(e.clientX, e.clientY);
-      var gx = +gridRange.value;
-      if(rec.t==='line'){
-        var L = rec.w || 160;
-        addNode({type:'line', x:p.x - L/2, y:p.y, x1:0, y1:0, x2:L, y2:0, strokeW:2, color:'#64748b'});
-      }else{
+        var text = ''; try{ text = dt.getData('text/plain'); }catch(_){}
+        if(!text) return;
+        var rec; try{ rec = JSON.parse(text); }catch(_){ return; }
+        var p = clientToStage(e.clientX, e.clientY);
+        var gx = +gridRange.value;
         var x = p.x - rec.w/2, y = p.y - rec.h/2;
         if(snapBox.checked){ x = Math.round(x/gx)*gx; y = Math.round(y/gx)*gx; }
         addNode({type:rec.t,x:x,y:y,w:rec.w,h:rec.h,text:rec.text,textMode:rec.textMode||'auto'});
-      }
-      pushHistory();
-    }, false);
+        pushHistory();
+      }, false);
 
     /* ===== 既定スタイル ===== */
     var typeDefaults = {
