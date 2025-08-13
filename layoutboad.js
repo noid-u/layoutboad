@@ -789,6 +789,7 @@
         c.arrowEnd   = !!ipConnArrowEnd.checked;
         updateConnection(c);
       });
+      updateAllConnectors();
     }
 
     $('#applyStyle').addEventListener('click', function(){ doApply(); pushHistory(); });
@@ -950,12 +951,22 @@
 
     function getAnchorPoint(el, name){
       var r = rectInfo(el);
+      var cx = r.x + r.w/2, cy = r.y + r.h/2;
+      var angle = parseFloat(el.dataset.rotate||'0') * Math.PI/180;
+      var ax, ay;
       if(!name || name==='auto') name = 'right';
-      if(name==='left')   return {x:r.x, y:r.y + r.h/2};
-      if(name==='right')  return {x:r.x + r.w, y:r.y + r.h/2};
-      if(name==='top')    return {x:r.x + r.w/2, y:r.y};
-      if(name==='bottom') return {x:r.x + r.w/2, y:r.y + r.h};
-      return {x:r.x + r.w, y:r.y + r.h/2};
+      if(name==='left'){ ax = r.x; ay = cy; }
+      else if(name==='right'){ ax = r.x + r.w; ay = cy; }
+      else if(name==='top'){ ax = cx; ay = r.y; }
+      else if(name==='bottom'){ ax = cx; ay = r.y + r.h; }
+      else { ax = r.x + r.w; ay = cy; }
+      if(angle){
+        var dx = ax - cx, dy = ay - cy;
+        var rx = cx + dx*Math.cos(angle) - dy*Math.sin(angle);
+        var ry = cy + dx*Math.sin(angle) + dy*Math.cos(angle);
+        ax = rx; ay = ry;
+      }
+      return {x:ax, y:ay};
     }
 
     function rectInfo(el){
