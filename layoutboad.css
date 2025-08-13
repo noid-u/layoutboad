@@ -1,0 +1,119 @@
+  :root{
+    --canvas-w: 1200px;
+    --canvas-h: 700px;
+    --grid: 20px;
+    --sel: #2563eb;
+    --bg:#ffffff;
+  }
+  html,body{height:100%;margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic UI",sans-serif;background:#ffffff;}
+  header{padding:10px 12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #e5e7eb;background:#f8fafc;position:sticky;top:0;z-index:20}
+  .group{display:flex;gap:6px;align-items:center;padding-left:6px;border-left:3px solid #e5e7eb}
+  .group-label{font-size:12px;color:#64748b;margin-right:4px}
+  button, select, input, label{font:inherit}
+  .btn{padding:6px 10px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer}
+  .btn:hover{background:#f1f5f9}
+  .btn-primary{border-color:#93c5fd;background:#dbeafe}
+  .btn-danger{border-color:#fca5a5;background:#fee2e2}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .wrap{display:flex;gap:14px;padding:14px}
+  /* パレット */
+  .palette{width:360px;flex:0 0 360px;border:1px solid #e5e7eb;border-radius:12px;padding:10px;background:#fff;align-self:flex-start}
+  .palette h2{font-size:14px;margin:0 0 8px;color:#374151}
+  .group-title{font-size:12px;color:#475569;font-weight:600;margin:8px 0 6px}
+  .items{display:grid;gap:8px;margin-bottom:10px}
+  .items.shapes{grid-template-columns:repeat(5,1fr)}
+  .items.objects{grid-template-columns:repeat(3,1fr)}
+  .item{border:1px dashed #94a3b8;border-radius:10px;padding:8px;text-align:center;background:#f8fafc;cursor:grab;user-select:none;display:flex;align-items:center;justify-content:center;height:58px}
+  .item:active{cursor:grabbing}
+  .item svg{width:28px;height:28px;display:block}
+  .item.text{height:42px;font-weight:600;color:#334155}
+  /* インスペクタ */
+  .inspector{margin-top:10px;border-top:1px solid #e5e7eb;padding-top:10px;display:grid;grid-template-columns:1fr 1fr;column-gap:12px;row-gap:12px;font-size:12px;position:relative}
+  .inspector label{display:flex;flex-direction:column;gap:6px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:8px}
+  .inspector .full{grid-column:1 / -1}
+  .inspector .subtle{font-size:11px;color:#64748b}
+  .inspector-actions{
+    position:sticky; top:8px; z-index:5;
+    grid-column:1 / -1; display:flex; gap:8px; align-items:center; justify-content:flex-end;
+    background:#ffffff; padding:8px 8px; border:1px solid #e5e7eb; border-radius:10px; box-shadow:0 2px 4px rgba(0,0,0,.04);
+  }
+  .inspector-actions .spacer{flex:1; text-align:left; color:#475569; font-weight:600}
+  .inspector-actions label{flex-direction:row; align-items:center; gap:6px; background:transparent; border:none; padding:0}
+  /* ビューポート＆キャンバス */
+  .stage-viewport{position:relative;overflow:auto;border-radius:12px;flex:1;min-height:720px;background:#fff;}
+  .stage-wrap{position:relative;transform-origin:left top;}
+  #stage{
+    position:relative;
+    width:var(--canvas-w);
+    height:var(--canvas-h);
+    background:var(--bg);
+    background-image:
+      linear-gradient(#f1f5f9 1px, transparent 1px),
+      linear-gradient(90deg, #f1f5f9 1px, transparent 1px);
+    background-size: var(--grid) var(--grid), var(--grid) var(--grid);
+    background-position: 0 0, 0 0;
+    overflow:hidden;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    box-sizing:content-box;
+  }
+  .grid-off #stage{ background-image:none; }
+  .node{
+    position:absolute; min-width:30px; min-height:1px; padding:0;
+    border:1px solid #cbd5e1; border-radius:8px; background:transparent; box-shadow:0 1px 2px rgba(0,0,0,.06);
+    user-select:none; cursor:move;
+    transform-origin:center center;
+    display:flex;
+  }
+  .node[data-type="desk"]{border-color:#eab308}
+  .node[data-type="chair"]{border-color:#06b6d4}
+  .node[data-type="pc"]{border-color:#6366f1}
+  .node[data-type="label"]{border-style:dotted}
+  .node[data-type="phone"]{border-color:#fb7185}
+  .node[data-type="circle"]{border-style:solid;border-radius:9999px}
+  .node[data-type="rect"]{border-style:solid}
+  .node[data-type="triangle"], .node[data-type="star"]{border:none}
+  .node.selected{outline:2px solid var(--sel); outline-offset:1px}
+  /* 形状レイヤ（クリップ用） */
+  .shape{position:absolute; inset:0; border-radius:inherit; pointer-events:none;}
+  .shape.circle{border-radius:9999px}
+  .shape.triangle{clip-path: polygon(50% 0%, 100% 100%, 0% 100%);}
+  .shape.star{clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);}
+  /* テキストエリア */
+  .label{
+    position:relative;
+    width:100%; height:100%;
+    pointer-events:none;
+    transform-origin:center center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:6px 8px; /* このパディングはエクスポート計算にも反映 */
+    border-radius:inherit;
+    box-sizing:border-box;
+  }
+  .label-inner{
+    white-space:pre-wrap;
+    text-align:center;
+    width:100%;
+    pointer-events:auto;
+  }
+  /* ハンドル（選択時のみ表示） */
+  .handle{position:absolute;width:10px;height:10px;background:#fff;border:1px solid #2563eb;border-radius:2px;box-shadow:0 0 0 1px #fff; display:none;}
+  .node.selected .handle{display:block;}
+  .handle.resize{right:-6px;bottom:-6px;cursor:nwse-resize}
+  .handle.rotate{top:-18px;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;cursor:grab}
+  /* 直線ノード */
+  .node[data-type="line"]{border:none; box-shadow:none; min-width:1px; min-height:1px;}
+  .line-svg{position:absolute; inset:0; pointer-events:none;}
+  .endpoint{position:absolute;width:10px;height:10px;border:1px solid #2563eb;background:#fff;border-radius:50%;transform:translate(-50%, -50%);cursor:pointer; display:none;}
+  .node.selected .endpoint{display:block;}
+  /* コネクタ（別レイヤ） */
+  #connLayer{position:absolute; left:0; top:0; width:100%; height:100%;}
+  .connector{pointer-events:stroke; cursor:pointer; stroke:#64748b; stroke-width:2;}
+  .connector.selected{stroke:var(--sel);}
+  .marquee{position:absolute;border:1px dashed #2563eb;background:rgba(37,99,235,.08);pointer-events:none;display:none}
+  .footer{padding:8px 14px;color:#64748b;font-size:12px}
+  .footer ul{margin:6px 0 0 18px;padding:0}
+  dialog{border:1px solid #cbd5e1;border-radius:10px;padding:12px}
+  .errorbar{position:fixed;left:12px;bottom:12px;background:#fee2e2;color:#7f1d1d;border:1px solid #fecaca;border-radius:8px;padding:8px 10px;font-size:12px;z-index:40;display:none;max-width:50ch;white-space:pre-wrap}
