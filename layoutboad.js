@@ -593,7 +593,13 @@
       };
       reader.readAsText(f, 'utf-8');
     });
-    $('#btnNew').addEventListener('click', function(){ if(confirm('現在のキャンバスを破棄してサンプルを読み込みます。よろしいですか？')){ loadSample(); setZoom(1); resetHistory(); } });
+    $('#btnNew').addEventListener('click', function(){
+      if(confirm('現在のキャンバスを破棄して空のキャンバスを作成します。よろしいですか？')){
+        loadFrom([]);
+        setZoom(1);
+        resetHistory();
+      }
+    });
 
     /* ===== 画像保存（コネクタ矢印対応・テキスト位置補正） ===== */
     var dlgImage = $('#dlgImage');
@@ -1025,31 +1031,12 @@
       updateAllConnectors();
     }
 
-    function loadSample(){
-      stage.querySelectorAll('.node').forEach(function(n){ n.remove(); });
-      connLayer.querySelectorAll('.connector').forEach(function(n){ n.remove(); });
-      connections=[];
-      addNode({type:'rect', x:60, y:60, w:120, h:60, text:'四角形'});
-      addNode({type:'circle', x:220, y:60, w:80, h:80, text:'円形'});
-      addNode({type:'triangle', x:330, y:60, w:100, h:80, text:'三角形'});
-      addNode({type:'star', x:460, y:50, w:100, h:100, text:'星形'});
-      addNode({type:'line', x:600, y:140, x1:0, y1:0, x2:200, y2:0, strokeW:2, color:'#64748b'});
-      var a = addNode({type:'desk', x:80, y:220, w:120, h:60, text:'机'});
-      var b = addNode({type:'pc', x:240, y:220, w:80, h:50, text:'PC'});
-      var connId = 'c'+uid();
-      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('id', connId); line.setAttribute('class','connector');
-      connLayer.appendChild(line);
-      connections.push({id:connId, from:a.dataset.id, to:b.dataset.id, fa:'auto', ta:'auto', stroke:2, color:'#64748b', arrowStart:false, arrowEnd:true});
-      updateAllConnectors();
-    }
-
     /* ===== 初期ロード ===== */
     (function init(){
       applyGrid(+gridRange.value);
       normalizeCanvasToGrid();
       updateConnLayerSize();
-      loadSample();
+      loadFrom([]);
       setZoom(1);
       resetHistory();
     })();
