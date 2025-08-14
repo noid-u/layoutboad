@@ -25,5 +25,5 @@ index.html をブラウザで開くとアプリが起動します。
 
 ファイル構成
   index.html: アプリ本体のHTML
-  layoutboad.js: アプリのロジック
-  layoutboad.css: スタイルシート
+  layout.js: アプリのロジック
+  layout.css: スタイルシート
