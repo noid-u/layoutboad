@@ -593,7 +593,13 @@
       };
       reader.readAsText(f, 'utf-8');
     });
-    $('#btnNew').addEventListener('click', function(){ if(confirm('現在のキャンバスを破棄してサンプルを読み込みます。よろしいですか？')){ loadSample(); setZoom(1); resetHistory(); } });
+    $('#btnNew').addEventListener('click', function(){
+      if(confirm('キャンバスを初期化しますか？')){
+        loadFrom([]);
+        setZoom(1);
+        resetHistory();
+      }
+    });
 
     /* ===== 画像保存（コネクタ矢印対応・テキスト位置補正） ===== */
     var dlgImage = $('#dlgImage');
@@ -1049,7 +1055,7 @@
       applyGrid(+gridRange.value);
       normalizeCanvasToGrid();
       updateConnLayerSize();
-      loadSample();
+      loadFrom([]);
       setZoom(1);
       resetHistory();
     })();
